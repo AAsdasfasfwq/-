@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Countdown to Hiroshima</title>
+<link rel="stylesheet" href="node_modules/@fontsource/oswald/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/oswald/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/oswald/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/playfair-display/400-italic.css">
+<link rel="stylesheet" href="node_modules/@fontsource/playfair-display/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/playfair-display/700-italic.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/800.css">
+<link rel="stylesheet" href="node_modules/@fontsource/jetbrains-mono/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/jetbrains-mono/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-jp/700.css">
+<style>
+  html, body { margin: 0; background: #000; color: #ddd; font-family: Inter, sans-serif; overflow: hidden; }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; background: #000; }
+  #stage canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; padding: 8px 12px; background: rgba(0,0,0,.75); display: flex; gap: 12px; align-items: center; font-size: 13px; z-index: 5; }
+  #ui button { background: #c62828; color: #fff; border: 0; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+  #bar { flex: 1; height: 10px; background: #333; border-radius: 5px; cursor: pointer; position: relative; }
+  #fill { position: absolute; left: 0; top: 0; bottom: 0; background: #e53935; border-radius: 5px; width: 0; }
+  #info { min-width: 260px; font-variant-numeric: tabular-nums; }
+  body.render #ui { display: none; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "./node_modules/three/build/three.module.js",
+  "three/addons/": "./node_modules/three/examples/jsm/",
+  "d3-geo": "./node_modules/d3-geo/src/index.js",
+  "d3-array": "./node_modules/d3-array/src/index.js",
+  "internmap": "./node_modules/internmap/src/index.js",
+  "topojson-client": "./node_modules/topojson-client/src/index.js"
+} }
+</script>
+</head>
+<body>
+<div id="stage"><canvas id="gl" width="1920" height="1080"></canvas><canvas id="ov" width="1920" height="1080"></canvas></div>
+<div id="ui"><button id="play">▶ Play</button><span id="info">loading…</span><div id="bar"><div id="fill"></div></div>
+<label><input type="checkbox" id="cap" checked> captions</label></div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
