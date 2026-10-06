@@ -104,7 +104,9 @@ async function main() {
   let wav = null;
   if (!NO_AUDIO) {
     console.log('Rendering Web Audio SFX offline…');
-    const { chunks } = await probe.page.evaluate(() => window.__buildAudio(48000));
+    const prog = setInterval(async () => { try { const p = await probe.page.evaluate(() => window.__audioProgress); process.stdout.write(`\r  audio ${Math.round(p * 100)}%   `); } catch {} }, 2000);
+    const { chunks } = await probe.page.evaluate((a, b) => window.__buildAudio(48000, a, b), start, end);
+    clearInterval(prog); console.log('');
     const parts = []; for (let i = 0; i < chunks; i++) parts.push(Buffer.from(await probe.page.evaluate((k) => window.__audioChunk(k), i), 'base64'));
     wav = path.join(chunkDir, 'sfx.wav'); fs.writeFileSync(wav, Buffer.concat(parts));
   }
@@ -119,7 +121,7 @@ async function main() {
 
   console.log('Mixing voice-over + SFX (SFX ducked under the voice)…');
   const voice = path.join(ROOT, 'assets', 'voice.mp3');
-  await ffmpeg(['-y', '-i', silent, '-ss', String(start), '-t', String(end - start), '-i', voice, '-ss', String(start), '-t', String(end - start), '-i', wav,
+  await ffmpeg(['-y', '-i', silent, '-ss', String(start), '-t', String(end - start), '-i', voice, '-i', wav,
     '-filter_complex', `[1:a]aresample=48000,asplit=2[v1][v2];[2:a]volume=${SFX_GAIN}[s];[s][v1]sidechaincompress=threshold=0.04:ratio=3:attack=15:release=350[sd];[v2][sd]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[a]`,
     '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', '-shortest', OUT]).done;
   fs.unlinkSync(silent);

@@ -66,8 +66,9 @@ function frame(t) {
 let sfxPCM = null;
 window.__init = init;
 window.__frame = (t) => { frame(t); return true; };
-window.__buildAudio = async (sampleRate = 48000) => {
-  const buf = await renderSfx(DURATION, sampleRate);
+window.__audioProgress = 0;
+window.__buildAudio = async (sampleRate = 48000, from = 0, to = DURATION) => {
+  const buf = await renderSfx(DURATION, sampleRate, from, to, (p) => (window.__audioProgress = p));
   sfxPCM = sfxToWav(buf); return { bytes: sfxPCM.length, chunks: Math.ceil(sfxPCM.length / (4 << 20)) };
 };
 window.__audioChunk = (i) => {
@@ -85,7 +86,8 @@ async function preview() {
   await init();
   info.textContent = 'building Web Audio SFX…';
   const ac = new AudioContext();
-  const sfx = await renderSfx(DURATION, ac.sampleRate);
+  const sfx0 = await renderSfx(DURATION, ac.sampleRate, 0, DURATION, (p) => (info.textContent = `building Web Audio SFX… ${Math.round(p * 100)}%`));
+  const sfx = ac.createBuffer(2, sfx0.length, ac.sampleRate); sfx.copyToChannel(sfx0.getChannelData(0), 0); sfx.copyToChannel(sfx0.getChannelData(1), 1);
   const voice = await ac.decodeAudioData(await (await fetch('assets/voice.mp3')).arrayBuffer());
   let playing = false, startAt = 0, offset = +(params.get('t') || 0), srcs = [];
   const now = () => (playing ? ac.currentTime - startAt : offset);

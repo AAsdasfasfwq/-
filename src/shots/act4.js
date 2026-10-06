@@ -51,7 +51,7 @@ export default function act4(add) {
     const card = (x, label, day, k, strike) => { panel(g, x - 170, 330, 340, 420, { k: 1 }); g.save(); g.fillStyle = PAL.red; g.fillRect(x - 170, 330, 340, 90); g.restore(); text(g, label, x, 375, { font: F.sans(42, 800), color: '#fff' }); text(g, day, x, 580, { font: F.sans(200, 800), color: '#151515', alpha: 1 }); if (strike > 0) { g.strokeStyle = PAL.red; g.lineWidth = 14; g.beginPath(); g.moveTo(x - 140, 470); g.lineTo(x - 140 + 280 * expoOut(strike), 470 + 220 * expoOut(strike)); g.stroke(); } };
     card(1150, 'AUGUST', '11', 1, flip); if (flip > .2) { g.save(); g.globalAlpha = clamp((flip - .2) * 2); card(1550, 'AUGUST', '9', 1, 0); g.restore(); text(g, '← 2 DAYS', 1350, 820, { font: F.sans(46, 800), color: PAL.red, alpha: clamp((flip - .4) * 2) }); }
     reveal(g, 'mission moved forward', 1350, 900, clamp((t - T('forward by two days')) / .6), { font: F.serif(44), color: '#333' });
-  }), { sfx: [[T('An approaching typhoon'), 'wind', { gain: .1 }], [T('forward by two days'), 'paper', { gain: .2 }], [T('two days.'), 'pop', {}]] });
+  }), { bed: [[T('An approaching typhoon'), T('A B-29 named'), 'wind', { gain: .1 }]], sfx: [[T('forward by two days'), 'paper', { gain: .2 }], [T('two days.'), 'pop', {}]] });
 
   add(T('A B-29 named') - .1, 'bockscar-takeoff', () => {
     const S = S2.tinian({ night: true, planes: 1 }); const old = S.fleet[0]; S.scene.remove(old);
